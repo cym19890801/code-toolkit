@@ -1,0 +1,58 @@
+1、以下为变量输出说明
+${user_name} ==> 输出当前系统用户名
+${.now?string("MM dd,yyyy")} ==> 把当前时间格式化“MM dd,yyyy”的字符串后输出
+${basepackage} ==> 输出配置模型时的package
+${requestMapping} ==> 输出配置模型时的requestMapping
+${table.className} ==> 输出表的类名称，把表名按驼峰规则转换
+${table.remarks} ==> 输出表的注释说明
+${table.pkColumns} ==> 表的主键集合
+${table.columns} ==> 表的字段集合
+
+2、示例
+#定义一个 str 字符串，赋值为"str"
+<#assign str = "str">
+
+#定义一个 className 变量并赋值为 table.className
+<#assign className = table.className>
+
+#定义一个 classNameLower 变量，并把 className 变量的首字母小写赋值给 classNameLower
+<#assign classNameLower = className?uncap_first>
+
+#if else 语法
+<#if condition>
+</#if>
+
+<#if condition>
+<#else>
+</#if>
+
+<#if condition1>
+<#elseif condition2>
+<#else>
+</#if>
+
+#遍历一个集合
+<#list table.pkColumns as column>
+</#list>
+
+#输出特殊符号
+输出 $ 使用 ${r'$'}
+输出 # 使用 ${r'#'}
+
+3、输出模型对象
+table<Table>: 表模型
+{
+    sqlName:表名
+    remarks:表说明
+    className:表的类名
+    pkColumns<List<Column>>:主键字段集合
+    columns<List<Column>>:字段集合
+}
+
+<Column>：字段模型
+{
+    sqlName:字段名称
+    columnNameLower:属性名(sqlName经驼峰转换)
+    remarks:字段注释
+    javaType:java类型(Date、BigDecimal)
+}

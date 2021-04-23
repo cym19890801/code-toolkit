@@ -1,0 +1,113 @@
+<#assign className = table.className>
+<#assign tableName = table.sqlName>
+<#assign classNameLower = className?uncap_first>
+<#assign dataRemark = table.remarks>
+<#assign dtoName = className + "DTO">
+<#assign dtoNamePath = basepackage+".dto."+dtoName>
+<#list table.pkColumns as column>
+<#assign primaryKey = column.sqlName>
+<#assign pkColumn = column.columnNameLower>
+</#list>
+<#assign bizColumns=""/>
+<#list table.otherColumns as column>
+<#if column.sqlName == "create_time" || column.sqlName == "create_user" || column.sqlName == "create_system" || column.sqlName == "update_time" || column.sqlName == "update_user" || column.sqlName == "update_system">
+<#else >
+<#assign bizColumns+=","+column.sqlName/>
+</#if>
+</#list>
+<#assign bizColumns=bizColumns?substring(1)/>
+
+<#assign primaryKeyConditions = primaryKey + "= ${r'#'}{" + pkColumn + ", jdbcType=VARCHAR}">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://basic.szzhijing.com/dtd/quanbu-batis-mapper.dtd">
+<mapper namespace="ns.${dtoNamePath}">
+    <resultMap id="default" type="${dtoNamePath}">
+        <#list table.pkColumns as column>
+        <id column="${column.sqlName}" property="${column.columnNameLower}" jdbcType="${column.jdbcType}"/>
+        </#list>
+        <#list table.otherColumns as column>
+        <result column="${column.sqlName}" property="${column.columnNameLower}" jdbcType="${column.jdbcType}"/>
+        </#list>
+    </resultMap>
+    <sql id="biz_columns">
+        <#list bizColumns?split(",") as column>
+        ${column}<#if column_has_next>,</#if>
+        </#list>
+    </sql>
+
+    <insert id="batchInsert">
+        <![CDATA[
+        insert into ${tableName} (
+        ${primaryKey} ,create_time, create_user, create_system,
+        ]]><include refid="biz_columns"/><![CDATA[
+        ) values ]]>
+        <foreach item="item" index="index" collection="array" separator=",">
+            <![CDATA[
+            (
+            ${r'#'}{item.${pkColumn},jdbcType=VARCHAR}, now(), ${r'#'}{item.createUser,jdbcType=VARCHAR}, ${r'#'}{item.createSystem,jdbcType=VARCHAR},
+            <#list bizColumns?split(",") as bizColumn>
+            <#list table.columns as column>
+            <#if bizColumn == column.sqlName>
+            ${r'#'}{item.${column.columnNameLower},jdbcType=${column.jdbcType}}<#if bizColumn_has_next>,</#if>
+            </#if>
+            </#list>
+            </#list>
+            )
+        ]]>
+    </foreach>
+    </insert>
+
+    <insert id="insert" parameterType="${dtoNamePath}">
+        <![CDATA[
+        insert into ${tableName} (
+        ${primaryKey} ,create_time, create_user, create_system,
+        ]]><include refid="biz_columns"/><![CDATA[
+        ) values (
+        ${r'#'}{${pkColumn},jdbcType=VARCHAR}, now(), ${r'#'}{createUser,jdbcType=VARCHAR}, ${r'#'}{createSystem,jdbcType=VARCHAR},
+        <#list bizColumns?split(",") as bizColumn>
+        <#list table.columns as column>
+        <#if bizColumn == column.sqlName>
+        ${r'#'}{${column.columnNameLower},jdbcType=${column.jdbcType}}<#if bizColumn_has_next>,</#if>
+        </#if>
+        </#list>
+        </#list>
+        )
+        ]]>
+    </insert>
+
+    <select id="retreive" resultMap="default" parameterType="java.lang.String">
+        <![CDATA[
+        select * from ${tableName} where ${primaryKeyConditions}
+        ]]>
+    </select>
+
+    <update id="update" parameterType="${dtoNamePath}" >
+        update ${tableName} set
+        <#list table.otherColumns as column>
+        <#if column.pk>
+        <#else>
+        ${column.sqlName} = ${r'#'}{${column.columnNameLower},jdbcType=${column.jdbcType}}<#if column_has_next>,</#if>
+        </#if>
+        </#list>
+        where  ${primaryKeyConditions}
+    </update>
+
+    <delete id="delete">
+        <![CDATA[
+        delete from ${tableName} where ${primaryKey} in
+        ]]>
+        <foreach item="pk" index="index" collection="array" open="(" separator="," close=")">
+            <![CDATA[${r'#'}{pk,jdbcType=VARCHAR}]]>
+        </foreach>
+    </delete>
+
+    <select id="query" resultMap="default"
+            parameterType="com.quanbu.framework.db.query.MybatisCondition">
+        <![CDATA[
+        select * from ${tableName} where 1=1
+        ]]>
+        <include refid="mybatis.statement.query.default"/>
+        ${r'$'}{orderByString}
+    </select>
+
+</mapper>

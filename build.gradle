@@ -1,0 +1,55 @@
+plugins {
+    id 'org.jetbrains.intellij' version '0.3.7'
+}
+
+group 'cn.cym.codetoolkit'
+version '1.1.4'
+
+sourceCompatibility = 1.8
+compileJava.options.encoding = 'UTF-8'
+
+apply plugin: "org.jetbrains.intellij"
+apply plugin: 'java'
+apply plugin: 'idea'
+
+intellij {
+//    version '2019.3.1'
+    version '2020.2.3'
+    pluginName 'code-toolkit'
+    intellij.updateSinceUntilBuild false
+    downloadSources false
+    sameSinceUntilBuild false
+    type 'IU'
+    plugins = ['DatabaseTools']
+    sandboxDirectory = '${rootProject.rootDir}/idea-sandbox'
+}
+
+repositories {
+//    mavenCentral()
+//    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.dom4j:dom4j:2.1.0"
+    compile "com.squareup.okhttp3:okhttp:3.9.1"
+    compile "com.alibaba:fastjson:1.2.2"
+    compile "org.apache.ant:ant:1.9.7"
+    compile "org.freemarker:freemarker:2.3.23"
+    compileOnly "org.projectlombok:lombok:1.18.10"
+    compile 'org.apache.commons:commons-lang3:3.5'
+    compile group: 'org.apache.maven', name: 'maven-model', version: '3.0'
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+}
+
+//指定编译的编码
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+}
+
+patchPluginXml {
+    changeNotes """
+      code toolkit<br>
+      <em>By chenyouming</em>"""
+}

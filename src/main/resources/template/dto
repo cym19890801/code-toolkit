@@ -1,0 +1,41 @@
+<#assign className = table.className>
+<#assign classNameLower = className?uncap_first>
+package ${basepackage}.dto;
+
+import java.io.Serializable;
+<#list table.columns as column>
+<#if column.javaType=="BigDecimal">
+import java.math.BigDecimal;
+<#break >
+</#if>
+</#list>
+<#list table.columns as column>
+<#if column.javaType == "Date">
+import java.util.Date;
+<#break >
+</#if>
+</#list>
+import com.quanbu.framework.annotation.QBEntityInfo;
+import lombok.Data;
+
+<#list table.pkColumns as column>
+<#assign pkColumn = column>
+</#list>
+/**
+* ${table.remarks }
+* <br>CreateDate ${.now?string("MM dd,yyyy")}
+*
+* @author ${user_name}
+* @since 1.0
+*/
+@Data
+@QBEntityInfo(id = "${pkColumn.columnNameLower}", crdt = "createTime", crps = "createUser", crss = "createSystem", mddt = "updateTime", mdps = "updateUser", mdss = "updateSystem")
+public class ${className}DTO implements Serializable {
+    <#list table.columns as column>
+    /**
+    * ${column.remarks}
+    */
+    private ${column.javaType} ${column.columnNameLower};
+
+    </#list>
+}

@@ -1,0 +1,187 @@
+<#assign className = table.className>
+<#assign tableName = table.sqlName>
+<#assign classNameLower = className?uncap_first>
+<#assign dataRemark = table.remarks>
+<#assign lowServiceClassName = classNameLower + "Serivce">
+<#assign dtoName = className + "DTO">
+package ${basepackage};
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+<#list table.columns as column>
+<#if column.sqlTypeName=="DECIMAL">
+import java.math.BigDecimal;
+<#break >
+</#if>
+</#list>
+<#list table.columns as column>
+<#if column.simpleJavaType == "Date">
+import java.util.Date;
+<#break >
+</#if>
+</#list>
+import com.quanbu.rz.business.BaseTester;
+import test.quanbu.rz.business.org.TestEnvironment;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import ${basepackage}.dto.${dtoName};
+import ${basepackage}.service.${className}Service;
+import com.quanbu.framework.result.ExecuteResult;
+import com.quanbu.framework.result.MultiEntryResult;
+import com.quanbu.framework.result.SingleEntryResult;
+import com.quanbu.framework.util.QBBeanUtil;
+import com.quanbu.rz.common.util.SimpleConditionFacade;
+<#list table.columns as column>
+    <#if column.pk>
+        <#assign primaryKey = column.sqlName>
+		<#assign pkColumn = column.columnNameLower>
+    </#if>
+</#list>
+<#assign bizColumns=""/>
+<#list table.columns as column>
+    <#if column.pk || column.sqlName == "org_code" || column.sqlName == "create_time" || column.sqlName == "create_user" || column.sqlName == "create_system" || column.sqlName == "update_time" || column.sqlName == "update_user" || column.sqlName == "update_system">
+    <#else >
+        <#assign bizColumns+=","+column.sqlName/>
+    </#if>
+</#list>
+<#assign bizColumns=bizColumns?substring(1)/>
+/**
+ * ${table.remarks }
+ * <br>CreateDate ${.now?string("MM dd,yyyy")}
+ *
+ * @author ${user_name}
+ * @since 1.0
+ */
+public class ${className}ServiceTest extends BaseTester {
+
+	//服务对象
+	private static ${className}Service ${lowServiceClassName} = null;
+
+    private ${dtoName} dto = null;
+
+    @BeforeClass
+    public static void setup() {
+        ${lowServiceClassName} = TestEnvironment.getReferenceBizServiceDirect(${className}Service.class, dobboUrl);
+    }
+
+    /**
+     * 设置数据
+     * @return ${dtoName}
+     */
+    private ${dtoName} setData() {
+        ${dtoName} dto = new ${dtoName}();
+        <#list table.columns as column>
+        <#if column.pk || column.sqlName == "org_code" || column.sqlName == "create_time" || column.sqlName == "create_user" || column.sqlName == "create_system" || column.sqlName == "update_time" || column.sqlName == "update_user" || column.sqlName == "update_system">
+        <#elseif column.simpleJavaType == "String">
+        dto.set${column.columnName}(getStringRandom(${column.size}));
+        <#elseif column.sqlTypeName == "DECIMAL">
+        dto.set${column.columnName}(new BigDecimal(getStringRandom(4)));
+        <#elseif column.simpleJavaType == "Date">
+        dto.set${column.columnName}(new Date());
+        </#if>
+        </#list>
+        return dto;
+    }
+
+    @Before
+    public void before() {
+        SingleEntryResult<${dtoName}> result = ${lowServiceClassName}.save(setData());
+        System.out.println(QBBeanUtil.toJson(result));
+        dto = result.getResult();
+    }
+
+    @After
+    public void after() {
+        // 清理数据
+        ExecuteResult delete = ${lowServiceClassName}.delete(new String[]{ dto.get${pkColumn?cap_first}() });
+        System.out.println(QBBeanUtil.toJson(delete));
+        assertTrue(delete.isSuccessful());
+    }
+
+	/**
+     * 保存
+     */
+	@Test
+    public void testSave() {
+        <#list table.columns as column>
+        <#if column.pk || column.sqlName == "org_code" || column.sqlName == "create_time" || column.sqlName == "create_user" || column.sqlName == "create_system" || column.sqlName == "update_time" || column.sqlName == "update_user" || column.sqlName == "update_system">
+        <#elseif column.simpleJavaType == "String">
+        dto.set${column.columnName}(getStringRandom(${column.size}));
+        <#elseif column.simpleJavaType == "Date">
+        dto.set${column.columnName}(new Date());
+        </#if>
+        </#list>
+        SingleEntryResult<${dtoName}> result = ${lowServiceClassName}.save(dto);
+        System.out.println(QBBeanUtil.toJson(result));
+        assertTrue(result.isSuccessful());
+        <#list table.columns as column>
+        <#if column.pk || column.sqlName == "org_code" || column.sqlName == "create_time" || column.sqlName == "create_user" || column.sqlName == "create_system" || column.sqlName == "update_time" || column.sqlName == "update_user" || column.sqlName == "update_system">
+        <#else>
+        assertTrue(result.getResult().get${column.columnName}().equals(dto.get${column.columnName}()));
+        </#if>
+        </#list>
+    }
+
+    /**
+     * 测试根据pkid数据
+     */
+    @Test
+    public void testRetrive() {
+        SingleEntryResult<${dtoName}> result = ${lowServiceClassName}.retrive(dto.get${pkColumn?cap_first}());
+        System.out.println(QBBeanUtil.toJson(result));
+        assertNotNull(result.getResult());
+        <#list table.columns as column>
+        <#if column.pk || column.sqlName == "org_code" || column.sqlName == "create_time" || column.sqlName == "create_user" || column.sqlName == "create_system" || column.sqlName == "update_time" || column.sqlName == "update_user" || column.sqlName == "update_system">
+        <#else>
+        assertTrue(result.getResult().get${column.columnName}().equals(dto.get${column.columnName}()));
+        </#if>
+        </#list>
+    }
+
+    /**
+     * 批量删除
+     */
+    @Test
+    public void testDelete() {
+        String ids[]= new String[2];
+        SingleEntryResult<${dtoName}> result = ${lowServiceClassName}.save(setData());
+        ids[0] = result.getResult().get${pkColumn?cap_first}();
+        result = ${lowServiceClassName}.save(setData());
+        ids[1] = result.getResult().get${pkColumn?cap_first}();
+        ExecuteResult delete = ${lowServiceClassName}.delete(ids);
+        System.out.println(QBBeanUtil.toJson(delete));
+        assertTrue(delete.isSuccessful());
+        assertNull(${lowServiceClassName}.retrive(ids[0]).getResult());
+        assertNull(${lowServiceClassName}.retrive(ids[1]).getResult());
+    }
+
+	/**
+     * 单表查询
+     */
+    @Test
+    public void testQuery() {
+        SimpleConditionFacade<${dtoName}> conditionFacade = new SimpleConditionFacade<>();
+        conditionFacade
+        <#list table.columns as column>
+        <#list bizColumns?split(",") as bizColumn>
+        <#if bizColumn == column.sqlName && column.sqlTypeName != "DECIMAL" && column.sqlTypeName != "INT" && column.sqlTypeName != "DATETIME">
+            .eq(${dtoName}::get${column.columnName}, dto.get${column.columnName}())
+        </#if>
+        </#list>
+        </#list>
+        ;
+        MultiEntryResult<${dtoName}> result = ${lowServiceClassName}.query(conditionFacade.getSimpleCondition());
+        System.out.println(QBBeanUtil.toJson(result));
+        assertTrue(result.list().size() == 1);
+        <#list table.columns as column>
+        <#if column.pk || column.sqlName == "org_code" || column.sqlName == "create_time" || column.sqlName == "create_user" || column.sqlName == "create_system" || column.sqlName == "update_time" || column.sqlName == "update_user" || column.sqlName == "update_system">
+        <#else>
+        assertTrue(result.list().get(0).get${column.columnName}().equals(dto.get${column.columnName}()));
+        </#if>
+        </#list>
+    }
+}

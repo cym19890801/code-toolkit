@@ -1,0 +1,62 @@
+<#assign className = table.className>
+<#assign classNameLower = className?uncap_first>
+package ${basepackage}.dto;
+
+import java.io.Serializable;
+<#list table.columns as column>
+<#if column.sqlTypeName=="DECIMAL">
+import java.math.BigDecimal;
+<#break >
+</#if>
+</#list>
+<#list table.columns as column>
+<#if column.simpleJavaType == "Date">
+import java.util.Date;
+<#break >
+</#if>
+</#list>
+import com.quanbu.framework.annotation.QBEntityInfo;
+
+<#list table.columns as column>
+    <#if column.pk>
+        <#assign pkColumn = column>
+    </#if>
+</#list>
+/**
+ * ${table.remarks }
+ * <br>CreateDate ${.now?string("MM dd,yyyy")}
+ *
+ * @author ${user_name}
+ * @since 1.0
+ */
+@QBEntityInfo(id = "${pkColumn.columnNameLower}", crdt = "createTime", crps = "createUser", crss = "createSystem", mddt = "updateTime", mdps = "updateUser", mdss = "updateSystem")
+public class ${className}DTO implements Serializable {
+    <#list table.columns as column>
+    /**
+      * ${column.remarks}
+      */
+    <#if column.sqlTypeName=="DECIMAL">
+    private BigDecimal ${column.columnNameLower};
+    <#else>
+    private ${column.simpleJavaType} ${column.columnNameLower};
+    </#if>
+    </#list>
+
+    <#list table.columns as column>
+    <#if column.sqlTypeName=="DECIMAL">
+	public BigDecimal get${column.columnName}() {
+		return this.${column.columnNameLower};
+	}
+	public void set${column.columnName}(BigDecimal ${column.columnNameLower}) {
+		this.${column.columnNameLower} = ${column.columnNameLower};
+	}
+    <#else >
+    public ${column.simpleJavaType} get${column.columnName}() {
+		return this.${column.columnNameLower};
+	}
+	public void set${column.columnName}(${column.simpleJavaType} ${column.columnNameLower}) {
+		this.${column.columnNameLower} = ${column.columnNameLower};
+	}
+    </#if>
+    </#list>
+}

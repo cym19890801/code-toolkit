@@ -1,0 +1,77 @@
+<idea-plugin>
+    <id>cn.cym.codetoolkit</id>
+    <name>code-toolkit</name>
+    <vendor email="chenyouming_hi@163.com" url="">chenyouming</vendor>
+
+    <description><![CDATA[
+    code toolkit,easy code,code generate,code tools<br>
+    English:
+    <ul>
+        <li>Generate code quickly from the Freemarker template.</li>
+        <li>Instead of overwriting an existing file, make a backup file for cross-referencing, which is useful when adding, subtracting, or modifying fields.</li>
+        <li>Provides a label function to save the configuration of different scenarios as labels, so that you can switch to fetch when needed.</li>
+        <li>Set template generated file path to provide fuzzy search function, easy to locate the output directory.</li>
+        <li>Provides the ability to edit Freemarker templates online.</li>
+        <li>Provides the ability to sync Freemarker templates to teammates on the LAN.</li>
+        <li>Provides the ability to revert code support to templates.</li>
+        <li>Provides the ability to synchronize the configuration of generated code to teammates on the LAN.</li>
+    </ul>
+    中文：
+    <ul>
+        <li>根据Freemarker模板快速生成代码。</li>
+        <li>对于已存在文件不会覆盖而是生成备份文件，以便进行对照修改，这在增减以及修改字段时非常有用。</li>
+        <li>提供标签功能，可以将不同场景的配置保存为标签，以便在需要时切换调取。</li>
+        <li>设置模板生成文件路径提供模糊搜索的功能，方便定位到输出目录。</li>
+        <li>提供在线编辑Freemarker模板的功能。</li>
+        <li>提供将Freemarker模板在局域网同步给队友的功能。</li>
+        <li>提供将代码支持反转为模板的功能。</li>
+        <li>提供将生成代码的配置在局域网同步给队友的功能。</li>
+    </ul>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+    on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <idea-version since-build="181"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <depends>com.intellij.database</depends>
+
+    <application-components>
+        <component>
+            <!-- Component's implementation class -->
+            <implementation-class>cn.cym.codetoolkit.component.StartUpApplicationComponent</implementation-class>
+        </component>
+    </application-components>
+
+    <actions>
+        <!-- Add your actions here -->
+        <group id="CodeToolkitMainMenu" text="_CodeToolkit" description="code toolkit group">
+            <add-to-group group-id="MainMenu" anchor="last" />
+            <!--<action class="com.gsww.jdp.action.GeneratorCodeAction" id="GeneratorCodeMainMenu" text="代码生成" />-->
+            <action class="cn.cym.codetoolkit.action.CodeTemplateAction" id="CodeToolkitCodeTemplateMainMenu" text="代码模板">
+                <keyboard-shortcut first-keystroke="alt t" keymap="$default"/>
+            </action>
+            <action class="cn.cym.codetoolkit.action.ColumnConfigAction" id="CodeToolkitColumnConfigMainMenu" text="列配置" />
+            <action class="cn.cym.codetoolkit.action.PrintLogAction" id="PrintLogMainMenu" text="开/关日志" />
+            <!--<action class="cn.cym.codetoolkit.action.UnitTestCoverageAction" id="UnitTestCoverageMainMenu" text="单元测试覆盖率" />-->
+            <!--<action class="cn.cym.codetoolkit.action.TestAction" id="TestAction" text="TestAction" />-->
+        </group>
+        <group id="CodeToolkitMainActionGroup" class="cn.cym.codetoolkit.action.MainActionGroup" text="_CodeToolkit" description="code toolkit">
+            <!--生成代码菜单-->
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="last"/>
+        </group>
+        <group id="CodeToolkitConverTemplate" text="_ConverTemplate" description="conver template group">
+            <add-to-group group-id="GenerateGroup" anchor="last" />
+            <action class="cn.cym.codetoolkit.action.ConverTemplateAction" id="CodeToolkitConverTemplate" text="converTemplate">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt c"/>
+            </action>
+        </group>
+    </actions>
+</idea-plugin>

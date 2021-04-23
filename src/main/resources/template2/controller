@@ -1,0 +1,80 @@
+<#assign className = table.className>
+<#assign classNameLower = className?uncap_first>
+package ${basepackage}.controller;
+
+import com.quanbu.framework.result.ExecuteResult;
+import com.quanbu.framework.result.MultiEntryResult;
+import com.quanbu.framework.result.SingleEntryResult;
+import com.quanbu.framework.web.ConditionParam;
+import com.quanbu.framework.query.SimpleCondition;
+import com.quanbu.framework.web.HTTPConditionTransfer;
+import ${basepackage}.dto.${className}DTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import ${basepackage}.service.${className}Service;
+import ${basepackage}.dto.${className}DTO;
+
+/**
+ * ${table.remarks }
+ * <br>CreateDate ${.now?string("MM dd,yyyy")}
+ *
+ * @author ${user_name}
+ * @since 1.0
+ */
+@RestController
+@RequestMapping("${requestMapping}")
+public class ${className}Controller {
+
+    @Autowired
+    private ${className}Service ${classNameLower}Service;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /**
+     * ${table.remarks } 新增
+     *
+     * @param dto ${table.remarks }DTO
+     * @return ${table.remarks }
+     */
+    @PostMapping("/save")
+    public SingleEntryResult<${className}DTO> save(@RequestBody(required = false) ${className}DTO dto) {
+    return this.${classNameLower}Service.save(dto);
+    }
+
+    /**
+    * ${table.remarks } 查询
+    *
+    * @param pk ${table.remarks }主键
+    * @return ${table.remarks }
+    */
+    @GetMapping("/findById")
+    public SingleEntryResult<${className}DTO> retrive(String pk) {
+        return this.${classNameLower}Service.retrive(pk);
+    }
+
+    /**
+    * ${table.remarks } 删除
+    *
+    * @param ids ${table.remarks }主键集合
+    * @return 是否成功
+    */
+    @RequestMapping("/del/ids")
+    @ResponseBody
+    public ExecuteResult delete(String[] ids) {
+        return this.${classNameLower}Service.delete(ids);
+    }
+
+    /**
+    * ${table.remarks } 查询
+    *
+    * @param conditionParam 查询条件对象
+    * @return ${table.remarks }集合
+    */
+    @PostMapping("/query")
+    public MultiEntryResult<${className}DTO> query(@RequestBody(required = false) ConditionParam conditionParam) {
+        SimpleCondition simpleCondition = HTTPConditionTransfer.transformToCondition(conditionParam);
+        return this.${classNameLower}Service.query(simpleCondition);
+    }
+}

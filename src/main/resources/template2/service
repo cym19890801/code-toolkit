@@ -1,0 +1,49 @@
+<#assign className = table.className>
+<#assign classNameLower = className?uncap_first>
+<#assign dataRemark = table.remarks>
+<#assign dtoName = className + "DTO">
+package ${basepackage}.service;
+
+import com.quanbu.framework.query.SimpleCondition;
+import com.quanbu.framework.result.ExecuteResult;
+import com.quanbu.framework.result.MultiEntryResult;
+import com.quanbu.framework.result.SingleEntryResult;
+import ${basepackage}.dto.${className}DTO;
+
+/**
+ * ${table.remarks }
+ * <br>CreateDate ${.now?string("MM dd,yyyy")}
+ *
+ * @author ${user_name}
+ * @since 1.0
+ */
+public interface ${className}Service {
+
+    /**
+    * ${dataRemark} 新增
+    * @param dto ${dataRemark}实体
+    * @return ${dataRemark}
+    */
+    SingleEntryResult<${dtoName}> save(${dtoName} dto);
+
+    /**
+    * ${dataRemark} 查询
+    * @param pk ${dataRemark}主键
+    * @return ${dataRemark}
+    */
+    SingleEntryResult<${dtoName}> retrive(String pk);
+
+    /**
+    * ${dataRemark} 删除
+    * @param ids ${dataRemark}主键集合
+    * @return 是否成功
+    */
+    ExecuteResult delete(String[] ids);
+
+    /**
+    * ${dataRemark} 查询
+    * @param condition 查询条件对象
+    * @return ${dataRemark}集合
+    */
+    MultiEntryResult<${dtoName}> query(SimpleCondition condition);
+}
