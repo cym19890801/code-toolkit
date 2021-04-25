@@ -4,12 +4,11 @@
     <vendor email="chenyouming_hi@163.com" url="">chenyouming</vendor>
 
     <description><![CDATA[
-    code toolkit,easy code,code generate,code tools<br>
     English:
     <ul>
         <li>Generate code quickly from the Freemarker template.</li>
         <li>Instead of overwriting an existing file, make a backup file for cross-referencing, which is useful when adding, subtracting, or modifying fields.</li>
-        <li>Provides a label function to save the configuration of different scenarios as labels, so that you can switch to fetch when needed.</li>
+        <li>Provides a label function to save the configuration of different scenarios as labels, so that you can switch to  wfetchhen needed.</li>
         <li>Set template generated file path to provide fuzzy search function, easy to locate the output directory.</li>
         <li>Provides the ability to edit Freemarker templates online.</li>
         <li>Provides the ability to sync Freemarker templates to teammates on the LAN.</li>
