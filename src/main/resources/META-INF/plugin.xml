@@ -15,6 +15,8 @@
         <li>Provides the ability to revert code support to templates.</li>
         <li>Provides the ability to synchronize the configuration of generated code to teammates on the LAN.</li>
     </ul>
+    If you have any questions, please contact me at chenyouming_hi@163.com
+
     中文：
     <ul>
         <li>根据Freemarker模板快速生成代码。</li>
@@ -26,6 +28,8 @@
         <li>提供将代码支持反转为模板的功能。</li>
         <li>提供将生成代码的配置在局域网同步给队友的功能。</li>
     </ul>
+    如果有问题可以联系我，邮箱：chenyouming_hi@163.com
+
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -33,6 +37,7 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
+    <depends>com.intellij.modules.java</depends>
 
     <idea-version since-build="181"/>
 
@@ -54,11 +59,11 @@
         <group id="CodeToolkitMainMenu" text="_CodeToolkit" description="code toolkit group">
             <add-to-group group-id="MainMenu" anchor="last" />
             <!--<action class="com.gsww.jdp.action.GeneratorCodeAction" id="GeneratorCodeMainMenu" text="代码生成" />-->
-            <action class="cn.cym.codetoolkit.action.CodeTemplateAction" id="CodeToolkitCodeTemplateMainMenu" text="代码模板">
+            <action class="cn.cym.codetoolkit.action.CodeTemplateAction" id="CodeToolkitCodeTemplateMainMenu" text="Code template">
                 <keyboard-shortcut first-keystroke="alt t" keymap="$default"/>
             </action>
-            <action class="cn.cym.codetoolkit.action.ColumnConfigAction" id="CodeToolkitColumnConfigMainMenu" text="列配置" />
-            <action class="cn.cym.codetoolkit.action.PrintLogAction" id="PrintLogMainMenu" text="开/关日志" />
+            <action class="cn.cym.codetoolkit.action.ColumnConfigAction" id="CodeToolkitColumnConfigMainMenu" text="Column config" />
+            <action class="cn.cym.codetoolkit.action.PrintLogAction" id="PrintLogMainMenu" text="Turn logs on/off" />
             <!--<action class="cn.cym.codetoolkit.action.UnitTestCoverageAction" id="UnitTestCoverageMainMenu" text="单元测试覆盖率" />-->
             <!--<action class="cn.cym.codetoolkit.action.TestAction" id="TestAction" text="TestAction" />-->
         </group>
@@ -68,7 +73,7 @@
         </group>
         <group id="CodeToolkitConverTemplate" text="_ConverTemplate" description="conver template group">
             <add-to-group group-id="GenerateGroup" anchor="last" />
-            <action class="cn.cym.codetoolkit.action.ConverTemplateAction" id="CodeToolkitConverTemplate" text="converTemplate">
+            <action class="cn.cym.codetoolkit.action.ConverTemplateAction" id="CodeToolkitConverTemplate" text="Conver Template">
                 <keyboard-shortcut keymap="$default" first-keystroke="alt c"/>
             </action>
         </group>

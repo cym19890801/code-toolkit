@@ -66,12 +66,12 @@ public class TableConfigDialog extends CodeToolkitDialog {
         cn.cym.codetoolkit.entity.config.Table saveTable = JSON.parseObject(jsonString, cn.cym.codetoolkit.entity.config.Table.class);
 
         DefaultTableModel tableModel = new DefaultTableModel();
-        tableModel.addColumn("字段名称");
-        tableModel.addColumn("字段映射名称");
-        tableModel.addColumn("字段映射类型");
-        tableModel.addColumn("关联策略");
-        tableModel.addColumn("关联表");
-        tableModel.addColumn("关联字段");
+        tableModel.addColumn("Field names");
+        tableModel.addColumn("Field map name");
+        tableModel.addColumn("Field mapping type");
+        tableModel.addColumn("Related policies");
+        tableModel.addColumn("Association table");
+        tableModel.addColumn("Associated fields");
         String jdpColumnConfig = PropertiesComponent.getInstance().getValue("jdp_column_config");
         List<ExtColumn> jdpColumnConfigs = JSON.parseArray(jdpColumnConfig, ExtColumn.class);
         if (jdpColumnConfigs != null && !jdpColumnConfigs.isEmpty()) {

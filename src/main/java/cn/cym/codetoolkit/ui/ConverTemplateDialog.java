@@ -69,7 +69,7 @@ public class ConverTemplateDialog extends CodeToolkitDialog {
     }
 
     private void onConver() {
-        String input = Messages.showInputDialog(ConverTemplateDialog.this, "请输入模板名称：", "转化模板", Messages.getInformationIcon());
+        String input = Messages.showInputDialog(ConverTemplateDialog.this, "Please enter a template name：", "Transformation of the template", Messages.getInformationIcon());
         if (StringUtils.isNotBlank(input)) {
             Editor editor = ideaProject.getAnActionEvent().getData(LangDataKeys.EDITOR);
             if (editor != null && editor.getDocument() != null) {
@@ -142,7 +142,7 @@ public class ConverTemplateDialog extends CodeToolkitDialog {
         JPanel jPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 3, 3));
         JButton add = new JButton(IconUtil.getAddIcon());
         add.setPreferredSize(new Dimension(60, 40));
-        JButton clear = new JButton("清空");
+        JButton clear = new JButton("clear");
         clear.setPreferredSize(new Dimension(60, 40));
         clear.addActionListener((e) -> {
             for (JTextField jTextField : map.keySet()) {

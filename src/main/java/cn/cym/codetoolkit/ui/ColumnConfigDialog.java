@@ -26,16 +26,16 @@ public class ColumnConfigDialog extends CodeToolkitDialog {
     private JButton del;
 
     public ColumnConfigDialog(IdeaProject ideaProject) {
-        setTitle("列配置");
+        setTitle("Column configuration");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
         DefaultTableModel defaultTableModel = new DefaultTableModel();
-        defaultTableModel.addColumn("列名称");
-        defaultTableModel.addColumn("列编码");
-        defaultTableModel.addColumn("列类型");
-        defaultTableModel.addColumn("可选择的值");
+        defaultTableModel.addColumn("Column name");
+        defaultTableModel.addColumn("Column coding");
+        defaultTableModel.addColumn("Column type");
+        defaultTableModel.addColumn("Optional values");
 
         String jdpColumnConfig = PropertiesComponent.getInstance().getValue("jdp_column_config");
         List<ExtColumn> extColumns = JSON.parseArray(jdpColumnConfig, ExtColumn.class);

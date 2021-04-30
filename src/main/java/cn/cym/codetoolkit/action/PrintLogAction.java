@@ -21,10 +21,10 @@ public class PrintLogAction extends AnAction {
         ProWizardContext localProjectInfo = ideaProject.getProWizardContext();
         if (localProjectInfo.isPrintLog()) {
             localProjectInfo.setPrintLog(false);
-            Messages.showInfoMessage("关闭日志", "开/关日志");
+            Messages.showInfoMessage("Closing journal", "Turn logs on/off");
         } else {
             localProjectInfo.setPrintLog(true);
-            Messages.showInfoMessage("开启日志", "开/关日志");
+            Messages.showInfoMessage("Open the log", "Turn logs on/off");
         }
 
         ideaProject.saveProWizardContext();

@@ -1,7 +1,6 @@
 package cn.cym.codetoolkit.ui;
 
 import cn.cym.codetoolkit.entity.IdeaProject;
-import cn.cym.codetoolkit.entity.ProWizardContext;
 
 import javax.swing.*;
 

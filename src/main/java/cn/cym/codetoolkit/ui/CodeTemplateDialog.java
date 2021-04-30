@@ -43,7 +43,7 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
     private EditorTextField editorTextField;
 
     public CodeTemplateDialog(IdeaProject ideaProject) {
-        setTitle("代码模板");
+        setTitle("Code template");
         setIdeaProject(ideaProject);
         JPanel contentPane = new JPanel(new BorderLayout());
         editorTextField = UIComponentUtils.createIdeaEditorTextField(ideaProject.getProject(), "");
@@ -170,22 +170,22 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
 
     private JButton createButtonTemplateServer() {
         JButton serverButton = new JButton("Template Server");
-        serverButton.setToolTipText("启动为模板服务");
+        serverButton.setToolTipText("Start serving as templates");
 
         serverButton.addActionListener((e) -> {
-            int op = Messages.showDialog("请选择客户端的操作系统", "提示", new String[]{"window", "mac"}, 0, Messages.getInformationIcon());
-            int result = Messages.showYesNoDialog(ideaProject.getProject(), "确定启动/关闭模板服务吗？", "同步模板提示", Messages.getInformationIcon());
+            int op = Messages.showDialog("Please select the operating system of the client", "Start serving as templates", new String[]{"window", "mac"}, 0, Messages.getInformationIcon());
+            int result = Messages.showYesNoDialog(ideaProject.getProject(), "Are you sure to start/close the template service?", "Start serving as templates", Messages.getInformationIcon());
             if (result == 0) {
                 SocketServer socketServer = new SocketServer(op == 0 ? ProjectConstants.DEFAULT_PORT : ProjectConstants.MAC_PORT);
                 try {
                     String zipFile = CodeToolkitUtils.getJdpTemplateWorkspace().getCanonicalPath() + ".zip";
                     ZipUtils.zipMultiFile(CodeToolkitUtils.getJdpTemplateWorkspace().getCanonicalPath(), zipFile, op == 0 ? "\\" : "/");
 
-                    ProgressManager.getInstance().run(new Task.Backgroundable(ideaProject.getProject(), "模板服务运行中...") {
+                    ProgressManager.getInstance().run(new Task.Backgroundable(ideaProject.getProject(), "The template service is running...") {
                         @Override
                         public void run(@NotNull ProgressIndicator progressIndicator) {
                             socketServer.start(new File(zipFile));
-                            progressIndicator.setText("关闭服务....");
+                            progressIndicator.setText("Close the service....");
                         }
                     });
                 } catch (SocketException socketException) {
@@ -205,10 +205,10 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
      */
     private JButton createButtonSync() {
         JButton syncButton = new JButton("Sync All");
-        syncButton.setToolTipText("同步模板");
+        syncButton.setToolTipText("Synchronize teammate templates");
 
         syncButton.addActionListener((e) -> {
-            int result = Messages.showYesNoDialog("此操作会同步模板覆盖已存在的本地模板且无法撤销，确认操作吗？", "同步模板", Messages.getWarningIcon());
+            int result = Messages.showYesNoDialog("This operation will synchronize the template to overwrite the existing local template and cannot be undone. Confirm operation?", "Synchronize templates", Messages.getWarningIcon());
             if (result == 0) {// 确认
                 ProWizardContext proWizardContext = ideaProject.getProWizardContext();
                 if (proWizardContext.getJdpServer() == null)
@@ -216,7 +216,7 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
 
                 ProWizardContext.JdpServer jdpServer = proWizardContext.getJdpServer();
                 if (StringUtils.isBlank(jdpServer.getHost())) {
-                    String input = Messages.showInputDialog(CodeTemplateDialog.this, "请输入host", "设置模板服务host", Messages.getInformationIcon());
+                    String input = Messages.showInputDialog(CodeTemplateDialog.this, "Please enter the host", "Synchronize templates", Messages.getInformationIcon());
                     if (StringUtils.isNotBlank(input)) {
                         jdpServer.setHost(input);
 
@@ -237,14 +237,14 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
      * 通过服务同步模板
      */
     private void syncTemplateByServer() {
-        ProgressManager.getInstance().run(new Task.Backgroundable(ideaProject.getProject(), "同步模板中...") {
+        ProgressManager.getInstance().run(new Task.Backgroundable(ideaProject.getProject(), "In the synchronous template...") {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 ApplicationManager.getApplication().invokeLater(() -> {
                     File file = new File(CodeToolkitUtils.mkdirCodeToolkitWorkspace(), ProjectConstants.TEMPLATE_ROOT_ZIP);
                     if (file.exists()) {
                         if (!file.canExecute()) {
-                            Messages.showInfoMessage(ideaProject.getProject(), "无法操作文件，稍后再试", "同步模板提示");
+                            Messages.showInfoMessage(ideaProject.getProject(), "Unable to manipulate file, try again later", "Synchronization Template Tips");
                             return ;
                         }
                         file.delete();
@@ -256,27 +256,27 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
                         }
                     }
 
-                    progressIndicator.setText("开始下载模板...");
+                    progressIndicator.setText("Start downloading templates...");
                     ProWizardContext proWizardContext = ideaProject.getProWizardContext();
                     new SocketClient(proWizardContext.getJdpServer().getHost(), SystemInfo.isMac ? ProjectConstants.MAC_PORT : ProjectConstants.DEFAULT_PORT).downloadFile(file);
-                    progressIndicator.setText("下载模板完成...");
+                    progressIndicator.setText("Download template completed...");
 
                     // todo 备份模板
                     // copyBackTemplate();
 
                     try {
-                        progressIndicator.setText("开始解压模板...");
+                        progressIndicator.setText("Begin unzipping the template...");
                         // 解压文件
                         ZipUtils.unzip(file.getCanonicalPath(), file.getParentFile().getCanonicalPath());
-                        progressIndicator.setText("解压模板完成...");
+                        progressIndicator.setText("Extracting the template is complete...");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
-                    progressIndicator.setText("开始更新模板...");
+                    progressIndicator.setText("Start updating templates...");
                     templates.setModel(getTemplates());
                     templates.updateUI();
-                    progressIndicator.setText("更新模板完成...");
+                    progressIndicator.setText("Update template completed...");
                 });
             }
         });
@@ -287,7 +287,7 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
 
         helpButton.addActionListener((e) -> {
             CodeToolkitDialog codeToolkitDialog = new CodeToolkitDialog();
-            codeToolkitDialog.setTitle("编写模板帮助");
+            codeToolkitDialog.setTitle("Writing Template Help");
             JScrollPane jscrollPane = new JScrollPane();
             String helpTxt = CodeToolkitUtils.getCodeTemplateHelpContent();
             EditorTextField editorTextField = UIComponentUtils.createIdeaEditorTextField(ideaProject.getProject(), helpTxt);
@@ -346,7 +346,7 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
         JButton buttonRemove = new JButton("Remove");
 
         buttonRemove.addActionListener(e -> {
-            int result = Messages.showYesNoDialog(CodeTemplateDialog.this, "确认删除该模板吗？", "删除模板提示", Messages.getWarningIcon());
+            int result = Messages.showYesNoDialog(CodeTemplateDialog.this, "Are you sure to delete this template？", "Delete template prompt", Messages.getWarningIcon());
             if (result == 0) {
                 String name = templates.getSelectedValue().toString();
                 File templateDir = GenerateUtils.getMkdirTemplateDir(name);
@@ -417,7 +417,7 @@ public class CodeTemplateDialog extends CodeToolkitDialog {
      * @return 获得的名称，为null表示取消输入
      */
     private String inputItemName(String initValue) {
-        return Messages.showInputDialog("新名称：", "Code Toolkit Title Info", Messages.getQuestionIcon(), initValue, new InputValidator() {
+        return Messages.showInputDialog("Newname：", "Code Toolkit Title Info", Messages.getQuestionIcon(), initValue, new InputValidator() {
             @Override
             public boolean checkInput(String inputString) {
                 // 非空校验

@@ -56,3 +56,63 @@ table<Table>: 表模型
     remarks:字段注释
     javaType:java类型(Date、BigDecimal)
 }
+
+------------------------------------------------------------------------------------
+1、The following is a description of the variable output
+${user_name} ==> Output the current system user name
+${.now?string("MM dd,yyyy")} ==> Format the current time "MM dd,yyyy" string after output
+${basepackage} ==> Package when the configuration model is printed
+${requestMapping} ==> RequestMapping when outputting the configuration model
+${table.className} ==> Outputs the class name of the table, and converts the table name according to the hump rule
+${table.remarks} ==> Comments to the output table
+${table.pkColumns} ==> The collection of primary keys for the table
+${table.columns} ==> A collection of fields for the table
+
+2、Give a typical example
+#Define a STR string and assign the value "STR".
+<#assign str = "str">
+
+#Define a className variable and assign it to Table.className
+<#assign className = table.className>
+
+#Define a classnamePower variable and assign the first lowercase letter of the className variable to classnamePower
+<#assign classNameLower = className?uncap_first>
+
+#If the else syntax
+<#if condition>
+</#if>
+
+<#if condition>
+<#else>
+</#if>
+
+<#if condition1>
+<#elseif condition2>
+<#else>
+</#if>
+
+#Iterate through a set
+<#list table.pkColumns as column>
+</#list>
+
+#Output special symbol
+Output $ use ${r'$'}
+Output # use ${r'#'}
+
+3、Output model object
+table<Table>: The table model
+{
+    sqlName:Table name
+    remarks:Table remark
+    className:Table class name
+    pkColumns<List<Column>>:Primary key field collection
+    columns<List<Column>>:Field collection
+}
+
+<Column>：Field model
+{
+    sqlName:Field names
+    columnNameLower:Attribute name(sqlName Through hump conversion)
+    remarks:Annotation fields
+    javaType:Java type(Date、BigDecimal)
+}

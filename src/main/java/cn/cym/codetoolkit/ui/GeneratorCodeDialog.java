@@ -73,7 +73,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
     public GeneratorCodeDialog(IdeaProject ideaProject) {
         setIdeaProject(ideaProject);
 
-        setTitle("设置生成代码输出模型");
+        setTitle("Sets the generated code output model");
         JPanel contentPane = new JPanel(new BorderLayout(5, 5));
         JPanel centerPanel = new JPanel();
         contentPane.add(centerPanel, BorderLayout.CENTER);
@@ -207,7 +207,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
     private JButton createSynConfigButton() {
         JButton syncConfig = new JButton("Sync Config");
         syncConfig.addActionListener(o -> {
-            int result = Messages.showYesNoDialog(ideaProject.getProject(), "确认操作吗？", "操作提示", Messages.getWarningIcon());
+            int result = Messages.showYesNoDialog(ideaProject.getProject(), "Confirm operation?", "Operation tip", Messages.getWarningIcon());
             if (result == 0) {
                 ProWizardContext proWizardContext = ideaProject.getProWizardContext();
                 if (proWizardContext.getJdpServer() == null)
@@ -215,7 +215,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
 
                 ProWizardContext.JdpServer jdpServer = proWizardContext.getJdpServer();
                 if (StringUtils.isBlank(jdpServer.getHost())) {
-                    String input = Messages.showInputDialog(ideaProject.getProject(), "请输入host", "设置模板服务host", Messages.getInformationIcon());
+                    String input = Messages.showInputDialog(ideaProject.getProject(), "Please enter the host", "Set up the template service host", Messages.getInformationIcon());
                     if (StringUtils.isNotBlank(input)) {
                         jdpServer.setHost(input);
 
@@ -288,7 +288,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
             if (fileServer.isStart()) {
                 fileServer.shutdown();
             } else {
-                ProgressManager.getInstance().run(new Task.Backgroundable(ideaProject.getProject(), "配置服务运行中...") {
+                ProgressManager.getInstance().run(new Task.Backgroundable(ideaProject.getProject(), "The configuration service is running...") {
                     @Override
                     public void run(@NotNull ProgressIndicator progressIndicator) {
                         try {
@@ -307,7 +307,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
         JButton save = new JButton("Save Config");
         save.addActionListener(o -> {
             ProWizardContext proWizardContext = ideaProject.getProWizardContext();
-            String inputString = Messages.showInputDialog("配置名称：", ProjectConstants.DIALOG_INPUT_TITLE, Messages.getQuestionIcon(), proWizardContext.getName(), new InputValidator() {
+            String inputString = Messages.showInputDialog("The name of the configuration：", ProjectConstants.DIALOG_INPUT_TITLE, Messages.getQuestionIcon(), proWizardContext.getName(), new InputValidator() {
                 @Override
                 public boolean checkInput(String inputString) {
                     // 非空校验
@@ -415,7 +415,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
         remove.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int result = Messages.showYesNoCancelDialog("确认删除该配置吗？", ProjectConstants.DIALOG_CONFIRM_TITLE, null);
+                int result = Messages.showYesNoCancelDialog("Are you sure to delete this configuration?", ProjectConstants.DIALOG_CONFIRM_TITLE, null);
                 if (result == 0) {
                     String configLabelName = configLabel.getText();
                     // 删除配置
@@ -513,11 +513,11 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
 
         try {
             DefaultTableModel tableModel = new DefaultTableModel();
-            tableModel.addColumn("是否输出");
-            tableModel.addColumn("模板");
-            tableModel.addColumn("生成文件名称");
-            tableModel.addColumn("生成文件后缀");
-            tableModel.addColumn("生成文件路径");
+            tableModel.addColumn("Whether the output");
+            tableModel.addColumn("Template");
+            tableModel.addColumn("Generate file name");
+            tableModel.addColumn("Build file suffix");
+            tableModel.addColumn("Generate file path");
             ProWizardContext proWizardContext = ideaProject.getProWizardContext();
             Map<String, Model> map = proWizardContext.getMap();
             for (File file : CodeToolkitUtils.getJdpTemplateWorkspace().listFiles()) {
@@ -595,7 +595,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
         VirtualFile toSelect = rootPathFile;
         ProWizardContext proWizardContext = ideaProject.getProWizardContext();
         if (proWizardContext.isLikeInputFillIn()) {
-            String input = Messages.showInputDialog(GeneratorCodeDialog.this, "请输入目录名称", "设置路径", Messages.getInformationIcon());
+            String input = Messages.showInputDialog(GeneratorCodeDialog.this, "Please enter a directory name", "Set the path", Messages.getInformationIcon());
             if (StringUtils.isNotBlank(input)) {
                 // todo
 
@@ -635,7 +635,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
                         return;
                     } else {
                         CodeToolkitDialog codeToolkitDialog = new CodeToolkitDialog();
-                        codeToolkitDialog.setTitle("匹配结果，请选择");
+                        codeToolkitDialog.setTitle("Match results, please select");
                         JScrollPane jscrollPane = new JScrollPane();
 
                         JList<String> jList = new JList<>();
@@ -709,7 +709,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
 
         buttonHelp.addActionListener(e -> {
             CodeToolkitDialog codeToolkitDialog = new CodeToolkitDialog();
-            codeToolkitDialog.setTitle("生成代码帮助");
+            codeToolkitDialog.setTitle("Generate code help");
             JScrollPane jscrollPane = new JScrollPane();
             String helpTxt = CodeToolkitUtils.getGeneratorCodeHelpContent();
             EditorTextField editorTextField = UIComponentUtils.createIdeaEditorTextField(ideaProject.getProject(), helpTxt);
@@ -723,11 +723,11 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
     }
 
     private JPanel createSmartPathPanel() {
-        JLabel label = new JLabel("路径填写方式");
+        JLabel label = new JLabel("Path filling method");
         label.setPreferredSize(dimension);
         JPanel panel = new JPanel(new BorderLayout(5, 3));
         panel.add(label, BorderLayout.WEST);
-        likeInputWay = new JRadioButton("优先按输入匹配");
+        likeInputWay = new JRadioButton("Priority is given to input matching");
         ProWizardContext proWizardContext = ideaProject.getProWizardContext();
         likeInputWay.setSelected(proWizardContext.isLikeInputFillIn());
         likeInputWay.addActionListener((e) -> {
@@ -739,7 +739,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
     }
 
     private JPanel createRootPathPanel() {
-        JLabel rootPathLabel = new JLabel("项目根目录");
+        JLabel rootPathLabel = new JLabel("Project root");
         rootPathLabel.setPreferredSize(dimension);
         JButton choosePathBtn = new JButton("choose path");
         choosePathBtn.addActionListener(e -> {
@@ -901,8 +901,8 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    String genertateCodeing = "正在生成代码...";
-                    String genertateOk = "生成代码完毕";
+                    String genertateCodeing = "Generating code...";
+                    String genertateOk = "Generate code finished";
                     Messages.showMessageDialog(ideaProject.getProject(), genertateOk, genertateCodeing, Messages.getInformationIcon());
                     VirtualFileManager.getInstance().syncRefresh();
                 }
@@ -913,7 +913,7 @@ public class GeneratorCodeDialog extends CodeToolkitDialog {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    Messages.showMessageDialog(ideaProject.getProject(), e.getMessage(), "发生错误!", Messages.getErrorIcon());
+                    Messages.showMessageDialog(ideaProject.getProject(), e.getMessage(), "Go wrong!", Messages.getErrorIcon());
                 }
             });
         }
